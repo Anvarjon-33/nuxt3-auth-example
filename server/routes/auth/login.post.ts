@@ -38,9 +38,23 @@ export default defineEventHandler(async (event) => {
 
   const config = useRuntimeConfig()
 
+  /*
+      {                                                                                             18:01:01
+      app: { baseURL: '/', buildAssetsDir: '/_nuxt/', cdnURL: '' },
+      nitro: { routeRules: { '/__nuxt_error': [Object] }, envPrefix: 'NUXT_' },
+      public: {},
+      cookieName: '__session',
+      cookieSecret: 'secret',
+      cookieExpires: 86400000,
+      cookieRememberMeExpires: 604800000
+      }
+  */
+
+console.log(config)
+
   const session = serialize({ userId: userWithPassword.id })
   const signedSession = sign(session, config.cookieSecret)
-
+  
   setCookie(event, config.cookieName, signedSession, {
     httpOnly: true,
     path: '/',
@@ -48,7 +62,6 @@ export default defineEventHandler(async (event) => {
     secure: process.env.NODE_ENV === 'production',
     expires: rememberMe ? new Date(Date.now() + config.cookieRememberMeExpires) : new Date(Date.now() + config.cookieExpires),
   })
-
   // eslint-disable-next-line @typescript-eslint/no-unused-vars
   const { password: _password, ...userWithoutPassword } = userWithPassword
 

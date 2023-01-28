@@ -38,8 +38,6 @@ export async function getSession(event: H3Event) {
 
   if (!unsignedSession)
     return null
-
   const session = deserialize(unsignedSession)
-
   return getUserById(session.userId)
 }

@@ -1,11 +1,13 @@
 import { getUsers, isAdmin } from '~~/server/models/user'
 
 export default defineEventHandler(async (event) => {
-  if (!isAdmin(event.context.user)) {
-    return createError({
+  if (!(await isAdmin(event.context.user))) {
+    console.log(event.context)
+    let err = createError({
       statusCode: 401,
       message: 'You don\'t have the rights to access this resource',
     })
+    return `<div>${err}</div><a href='/'>Home</a>`
   }
 
   const usersWithPassword = await getUsers()
